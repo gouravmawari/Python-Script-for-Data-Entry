@@ -1,0 +1,714 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "FORM for CVS",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "upload CVS file",
+              "fieldType": "file"
+            },
+            {
+              "fieldLabel": "whats your email to get duplicate entries"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -256,
+        -256
+      ],
+      "id": "075155c5-156a-4bd6-86da-bf746651f494",
+      "name": "On form submission1",
+      "webhookId": "65f9f365-d44f-4522-aa11-a76eafdd765d"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        672,
+        -272
+      ],
+      "id": "b70c740a-cb40-4bdf-9954-cdfa16f69f7a",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "05b9449b-e46b-40e1-97bf-a0ca762a69ef",
+              "name": "name",
+              "value": "={{ $json[\"Full Name\"] || \" \" || $json.worker_name || $json.Name}}  ",
+              "type": "string"
+            },
+            {
+              "id": "eacb9cf7-0026-405c-9d14-bddd02ec914f",
+              "name": "email",
+              "value": "={{ $json.Email  || \" \" || $json.email_id}} ",
+              "type": "string"
+            },
+            {
+              "id": "064c4519-3877-4cfd-8ec3-0da2245f741d",
+              "name": "phone",
+              "value": "={{ $json.Phone  || \" \" || $json[\"Phone Number\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "9cfcc69a-8cb7-4e80-b5da-590360a793fe",
+              "name": "city",
+              "value": "={{ $json.City || \" \" || $json.location || $json.City}}",
+              "type": "string"
+            },
+            {
+              "id": "bd706b5f-29ff-45a4-9e13-a39e25540580",
+              "name": "experience_years",
+              "value": "={{ $json[\"Experience (Years)\"]  || \" \"}} ",
+              "type": "number"
+            },
+            {
+              "id": "d6841a67-80aa-4ad6-b6a6-0a26a558478c",
+              "name": "Applied Date",
+              "value": "={{ $json[\"Applied Date\"] || \" \"}}",
+              "type": "string"
+            },
+            {
+              "id": "7ea6ff68-5d47-4f1b-99e9-6333ea8fd7dc",
+              "name": "skills",
+              "value": "={{ $json.Skills || \" \" || $json.skill_tags}}",
+              "type": "string"
+            },
+            {
+              "id": "b0edb4bf-7377-4b5e-a99b-e353965f7437",
+              "name": "ctc",
+              "value": "={{ $json[\"Current CTC\"] || \" \"}}",
+              "type": "string"
+            },
+            {
+              "id": "01341925-8793-44c2-879d-e7edb578df89",
+              "name": "status",
+              "value": "={{ $json.status || \" \" || $json.status}}",
+              "type": "string"
+            },
+            {
+              "id": "a3453552-28f9-4335-827f-bdfb0fb04750",
+              "name": "rate_per_hour_normalized",
+              "value": "={{ $json.rate || \"\" }}",
+              "type": "number"
+            },
+            {
+              "id": "82962e4e-24dc-470d-9152-a9939cb4ee0c",
+              "name": "verified",
+              "value": "={{ $json.Verified || false }}",
+              "type": "boolean"
+            },
+            {
+              "id": "6a64886c-edf8-414a-b550-074aa0c603e6",
+              "name": "projects_completed",
+              "value": "={{ $json[\"Projects Completed\"] || \" \" }}",
+              "type": "number"
+            },
+            {
+              "id": "7cd87338-8409-483b-98cb-e516390d3e25",
+              "name": "sources",
+              "value": "={{ $('On form submission1').item.json[\"upload CVS file\"][0].filename }}",
+              "type": "string"
+            },
+            {
+              "id": "3bef8bad-d112-4d51-a496-369ca76e7e9c",
+              "name": "sources_count",
+              "value": 0,
+              "type": "number"
+            },
+            {
+              "id": "5476b66c-5144-42eb-a27d-7e7c2b24d2fc",
+              "name": "quality_score",
+              "value": "0",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        880,
+        -176
+      ],
+      "id": "7dff92ac-2360-466e-a092-fdeae6fc0182",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0e38551d-54ba-435e-833a-4ee759fc6575",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1328,
+        -176
+      ],
+      "id": "8af9ecf1-3c57-4608-984d-6cd6ed42482d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission1').item.json[\"whats your email to get duplicate entries\"] }}",
+        "subject": "Duplicated entries",
+        "emailType": "text",
+        "message": "=this sheet contain duplicate entries it can be empty\nhttps://docs.google.com/spreadsheets/d/{{ $('create copy of sheet').first().json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        -336
+      ],
+      "id": "722487a9-b6ab-4774-aec2-5cb3ba207ffd",
+      "name": "Send a message",
+      "webhookId": "d10cc38f-acdb-4685-b64d-9643d65ec93f",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SQ8eYAhHVmBt8rtY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        480,
+        -272
+      ],
+      "id": "6a57e070-a593-4f9c-95d1-d3025b004fd0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "upload_CVS_file",
+        "options": {
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -256
+      ],
+      "id": "c403cfc2-1a18-4567-849c-df4f51af4d22",
+      "name": "Extract entries"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1Sq3c3PfyZcUow5kXd77nS4DDNML13i1D4vtiDgPtoxI",
+          "mode": "list",
+          "cachedResultName": "ConsultBea",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Sq3c3PfyZcUow5kXd77nS4DDNML13i1D4vtiDgPtoxI/edit?usp=drivesdk"
+        },
+        "name": "={{ $('On form submission1').item.json[\"upload CVS file\"][0].filename + \"copy\" }}",
+        "options": {
+          "copyRequiresWriterPermission": false
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        144,
+        -496
+      ],
+      "id": "e34dc0e8-38f6-405d-a27f-0b75a8a05d71",
+      "name": "create copy of sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Kx3UFGjrEJHaYVib",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        352,
+        -496
+      ],
+      "id": "c21df271-7609-4f64-b5b6-d3ade7d7a971",
+      "name": "change perm of sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Kx3UFGjrEJHaYVib",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM people\nWHERE (email IS NOT NULL AND email = $1)\n   OR (phone IS NOT NULL AND phone = $2)\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.email }}, {{ $json.phone }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1088,
+        -176
+      ],
+      "id": "5647caed-f31b-4d1d-84dd-afc6d2c36989",
+      "name": "Search User",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "Gz3kRaIPv5Sm6nBB",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('create copy of sheet').first().json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1648,
+        -192
+      ],
+      "id": "705ad52b-a105-480c-bc1e-91d24d7a5e4d",
+      "name": "Duplicate Entries",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GyccC5kPXAYkwcLX",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "people",
+          "mode": "list",
+          "cachedResultName": "people"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "verified": "={{ $('Edit Fields').item.json.verified }}",
+            "name": "={{ $('Edit Fields').item.json.name }}",
+            "email": "={{ $('Edit Fields').item.json.email }}",
+            "phone": "={{ $('Edit Fields').item.json.phone }}",
+            "city": "={{ $('Edit Fields').item.json.city }}",
+            "skills": "={{ $('Edit Fields').item.json.skills }}",
+            "experience_years": "={{ $('Edit Fields').item.json.experience_years }}",
+            "ctc": "={{ $('Edit Fields').item.json.ctc }}",
+            "status": "={{ $('Edit Fields').item.json.status }}",
+            "rate_per_hour_normalized": "={{ $('Edit Fields').item.json.rate_per_hour_normalized }}",
+            "projects_completed": "={{ $('Edit Fields').item.json.projects_completed }}",
+            "sources": "={{ $('Edit Fields').item.json.sources }}",
+            "source_count": "={{ $('Edit Fields').item.json.sources_count }}",
+            "quality_score": "={{ $('Edit Fields').item.json.quality_score }}",
+            "created_at": "={{new Date()}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "skills",
+              "displayName": "skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experience_years",
+              "displayName": "experience_years",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ctc",
+              "displayName": "ctc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rate_per_hour_normalized",
+              "displayName": "rate_per_hour_normalized",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "verified",
+              "displayName": "verified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "projects_completed",
+              "displayName": "projects_completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sources",
+              "displayName": "sources",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_count",
+              "displayName": "source_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quality_score",
+              "displayName": "quality_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1440,
+        -32
+      ],
+      "id": "41143fc0-dc2e-4db8-a07c-28e04c5060ae",
+      "name": "New Entries",
+      "credentials": {
+        "postgres": {
+          "id": "Gz3kRaIPv5Sm6nBB",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On form submission1": {
+      "main": [
+        [
+          {
+            "node": "Extract entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Search User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Duplicate Entries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "New Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract entries": {
+      "main": [
+        [
+          {
+            "node": "create copy of sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "create copy of sheet": {
+      "main": [
+        [
+          {
+            "node": "change perm of sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "change perm of sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search User": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Duplicate Entries": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Entries": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c5fa00e81f9bca4d949418b6063891d971c8d47f6211173fe651e04cf9e9c27c"
+  }
+}
